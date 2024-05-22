@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="numberGuessGame.css" />
+    <title>숫자 추측 게임</title>
+  </head>
+  <body>
+    <div id="header"><h1>랜덤 숫자 맞추기 게임</h1></div>
+    <div id="quetion">
+      <p>1부터 100 사이의 숫자를 5회까지 입력할 수 있습니다.</p>
+      <p>입력한 값에 따라 랜덤 숫자가 보다 크거나 작음을 알려드립니다.</p>
+      <p>5회 안에 맞추면 성공, 기회를 모두 소진하시면 실패입니다.</p>
+      <p id="highright">자 그럼, 랜덤 숫자를 알아 맞춰보세요 ♪(^∇^*)</p>
+    </div>
+
+    <br />
+
+    <input id="number" type="text" value /> <br />
+    <button class="btn" onclick="clickBtn()">성공할까요?</button>
+    <p id="answer"></p>
+  </body>
+  <script>
+    const input = document.querySelector("#number");
+    const pTag = document.querySelector("#answer");
+    const button = document.querySelector("button");
+    let randomNum = 0;
+    let resultMent = "";
+    const MAX_COUNT = 0;
+    let count = 5;
+
+    function reset() {
+      count = 5;
+      randomNum = getRandomNum();
+      pTag.innerHTML = "";
+      resultMent = "";
+      input.value = "";
+    }
+
+    function getRandomNum() {
+      return parseInt(Math.random() * 100) + 1;
+    }
+    randomNum = getRandomNum();
+
+    function clickBtn() {
+      if (count == MAX_COUNT) {
+        reset();
+        return false;
+      }
+
+      let inputNum = input.value;
+
+      if (randomNum == inputNum) {
+        resultMent = `정답입니다!! 랜덤 숫자는 ${randomNum} 였네요 (*^▽^*)`;
+        alert(resultMent);
+        reset();
+      } else {
+        count--;
+        if (randomNum > inputNum) {
+          resultMent = `랜덤 숫자는 입력한 숫자보다 커요👍 입력한 숫자: ${inputNum} / 남은 기회: ${count} <br><br> `;
+        } else {
+          resultMent = `랜덤 숫자는 입력한 숫자보다 작아요👎 입력한 숫자: ${inputNum} / 남은 기회: ${count} <br><br>`;
+        }
+      }
+
+      pTag.innerHTML += resultMent;
+
+      if (MAX_COUNT == count) {
+        resultMent = `실패입니다.. 랜덤 숫자는 ${randomNum} 였어요 (*‾◡◝*)`;
+        alert(resultMent);
+        reset();
+      }
+    }
+  </script>
+</html>
