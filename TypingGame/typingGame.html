@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>스피드 타이핑 게임</title>
+  </head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url("../resources/img/시나모롤배경2.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #container {
+      width: 90%;
+      height: 80%;
+      position: relative;
+    }
+    #input {
+      width: 200px;
+      height: 50px;
+      font-size: 13px;
+      text-align: center;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgb(206, 232, 255);
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+    .word {
+      color: white;
+      font-size: 25px;
+      font-weight: 500;
+      position: absolute;
+    }
+    .score {
+      color: white;
+      font-size: 40px;
+      font-weight: 600;
+      position: absolute;
+      top: 0;
+      right: 30px;
+      padding: 10px;
+    }
+  </style>
+  <body>
+    <div id="container">
+      <input id="input" type="tel" placeholder="내려오는 단어를 입력하세요!" />
+    </div>
+    <div class="score">score: 0</div>
+  </body>
+  <script>
+    const words = [
+      "Cinnamoroll",
+      "Mymelody",
+      "hellokitty",
+      "Kuromi",
+      "pochacco",
+      "pompompurin",
+      "Kerope",
+      "Sanrio",
+    ];
+    const input = document.querySelector("#input");
+    let score = 0;
+    const scorePanel = document.querySelector(".score");
+    let count = 0;
+
+    // 단어 출력 될 범위 지정
+    const container = document.querySelector("#container");
+    const maxPosotionX = container.offsetWidth - 90;
+    const maxPosotionY = container.offsetHeight - 120;
+
+    // 단어 생성 및 출력
+    function init() {
+      words.forEach(function (el) {
+        const span = document.createElement("span");
+        span.innerHTML = el;
+        span.classList.add("word");
+        span.setAttribute("id", el);
+        span.style.top = `${Math.floor(Math.random() * maxPosotionY)}px`;
+        span.style.left = `${Math.floor(Math.random() * maxPosotionX)}px`;
+        container.append(span);
+      });
+    }
+
+    // 텍스트 입력 시 동일한 id의 단어를 제거
+    input.addEventListener("change", function () {
+      const word = document.querySelector(`span[id=${input.value}]`);
+      if (word != null) {
+        word.remove();
+        score = score + 50;
+        scorePanel.innerHTML = `score: ${score}`;
+
+        count++;
+        // 게임 클리어
+        if (count == words.length) {
+          alert("Clear !!");
+          if (confirm("Replay ??")) {
+            window.location.reload();
+          }
+        }
+      }
+      input.value = "";
+    });
+
+    // 단어 내려오게 하기 (타임어택)
+    function timeAttack() {
+      const words = document.querySelectorAll(".word");
+      console.log(container.getBoundingClientRect().bottom - 45);
+      setInterval(function () {
+        words.forEach(function (el) {
+          const rectSize = el.getBoundingClientRect();
+          el.style.top = `${rectSize.top - 75}px`;
+          if (
+            el.getBoundingClientRect().bottom >
+            container.getBoundingClientRect().bottom -
+              parseInt(getComputedStyle(input).height.split("px")[0])
+          ) {
+            el.remove();
+          }
+        });
+      }, 1000);
+    }
+
+    init();
+    timeAttack();
+  </script>
+</html>
